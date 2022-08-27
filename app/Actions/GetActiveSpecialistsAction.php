@@ -9,8 +9,14 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GetActiveSpecialistsAction
 {
-    public function execute(int $page = 1, int $perPage = 20): LengthAwarePaginator
+    public function execute(int $page = 1, int $perPage = 20, ?int $forSpeciality = null): LengthAwarePaginator
     {
-        return Specialist::active()->paginate(perPage: $perPage, page: $page);
+        $query = Specialist::active();
+
+        if ($forSpeciality) {
+            $query->where('speciality_id', $forSpeciality);
+        }
+
+        return $query->paginate(perPage: $perPage, page: $page);
     }
 }

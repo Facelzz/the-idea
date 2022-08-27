@@ -15,7 +15,11 @@ class GetSpecialistListController
         GetSpecialistListRequest $request,
         GetActiveSpecialistsAction $getSpecialists
     ): JsonResponse {
-        $specialists = $getSpecialists->execute($request->getPage(), $request->getPerPage());
+        $specialists = $getSpecialists->execute(
+            $request->getPage(),
+            $request->getPerPage(),
+            $request->getSpecialityId()
+        );
 
         return response()->json(SpecialistListResource::collection($specialists));
     }
