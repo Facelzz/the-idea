@@ -8,7 +8,7 @@ use App\Enums\SpecialityStatus;
 use App\Models\Speciality;
 use Tests\TestCase;
 
-class SpecialityDictionaryTest extends TestCase
+class GetSpecialityListTest extends TestCase
 {
     private string $route = 'api.specialities.index';
 

@@ -9,7 +9,7 @@ use App\Models\Specialist;
 use App\Models\Speciality;
 use Tests\TestCase;
 
-class ListSpecialistsTest extends TestCase
+class GetSpecialistListTest extends TestCase
 {
     private string $route = 'api.specialists.index';
 
