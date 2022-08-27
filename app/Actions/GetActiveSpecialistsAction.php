@@ -11,7 +11,7 @@ class GetActiveSpecialistsAction
 {
     public function execute(int $page = 1, int $perPage = 20, ?int $forSpeciality = null): LengthAwarePaginator
     {
-        $query = Specialist::active();
+        $query = Specialist::active()->with('speciality');
 
         if ($forSpeciality) {
             $query->where('speciality_id', $forSpeciality);

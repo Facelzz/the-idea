@@ -90,7 +90,10 @@ class GetSpecialistListTest extends TestCase
             '*' => [
                 'id',
                 'name',
-                'speciality',
+                'speciality' => [
+                    'id',
+                    'name',
+                ],
             ],
         ]);
     }

@@ -19,7 +19,10 @@ class SpecialistListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'speciality' => $this->speciality?->name,
+            'speciality' => $this->speciality ? [
+                'id' => $this->speciality->id,
+                'name' => $this->speciality->name,
+            ] : null,
         ];
     }
 }
