@@ -6,9 +6,10 @@ namespace App\Models;
 
 use App\Enums\SpecialistStatus;
 use Database\Factories\SpecialistFactory;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Collection, Model, Relations\HasMany, SoftDeletes};
 
 /**
  * @property int $id
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
  * @property string $name
  * @property null|int $speciality_id
  * @property null|Specialist $speciality
+ * @property Collection<Appointment> $appointments
  *
  * @method Builder|self active()
  * @method static SpecialistFactory factory($count = null, $state = [])
@@ -24,9 +26,11 @@ use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
  */
 class Specialist extends Model
 {
+    use CascadeSoftDeletes;
     use HasFactory;
     use SoftDeletes;
 
+    protected array $cascadeDeletes = ['appointments'];
     protected $guarded = [];
     protected $casts = [
         'status' => SpecialistStatus::class,
@@ -35,6 +39,11 @@ class Specialist extends Model
     public function speciality(): BelongsTo
     {
         return $this->belongsTo(Speciality::class);
+    }
+
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
     }
 
     public function scopeActive(Builder $builder): Builder
