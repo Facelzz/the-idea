@@ -57,9 +57,10 @@ class GetAvailableDaysForSpecialistTest extends TestCase
     {
         $this->travelTo(now()->startOfMonth());
         $specialist = Specialist::factory()->create(['status' => SpecialistStatus::Active]);
+        $busyDay = now()->addDays(5);
         Appointment::factory()->create([
             'specialist_id' => $specialist->id,
-            'time' => now(),
+            'time' => $busyDay->setTime(8, 0),
         ]);
         $response = $this->getJson(route($this->route, ['specialist' => $specialist->id]));
         $response->assertOk();
@@ -67,6 +68,15 @@ class GetAvailableDaysForSpecialistTest extends TestCase
         foreach ($response->json() as $item) {
             $this->assertMatchesRegularExpression('/^\d{2}-\d{2}-\d{4}$/', $item);
         }
-        $response->assertDontSee(now()->format('d-m-Y'));
+        $response->assertSee($busyDay->format('d-m-Y'));
+
+        foreach (range(9, 16) as $hour) {
+            Appointment::factory()->create([
+                'specialist_id' => $specialist->id,
+                'time' => $busyDay->setTime($hour, 0),
+            ]);
+        }
+        $response = $this->getJson(route($this->route, ['specialist' => $specialist->id]));
+        $response->assertDontSee($busyDay->format('d-m-Y'));
     }
 }
