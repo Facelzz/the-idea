@@ -34,6 +34,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
 
+  /api/specialists/{specialist}:
+    get:
+      tags: [ Specialists ]
+      summary: Get free days
+      description: Get free days for a specific specialist
+      parameters:
+        - $ref: '#/components/parameters/SpecialityIdParameter'
+        - $ref: '#/components/parameters/SpecialistDueTo'
+      responses:
+        200:
+          description: List of free days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialistDay'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
 components:
   parameters:
 
@@ -58,6 +82,23 @@ components:
       schema:
         $ref: '#/components/schemas/Id'
 
+    SpecialistId:
+      in: path
+      name: specialist
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    SpecialistDueTo:
+      in: query
+      name: dueTo
+      required: false
+      description: |
+        Defines the `to` date for free days filtration, where `from` date is **today**.
+        Default value is the first day of the next month
+      schema:
+        $ref: '#/components/schemas/SpecialistDueToParameter'
+
   schemas:
 
     Id:
@@ -80,6 +121,17 @@ components:
     SpecialityName:
       type: string
       maxLength: 128
+
+    SpecialistDueToParameter:
+      type: string
+      description: Defines the 'to' date for free days filtration, when 'from' in **now**
+      format: date
+      example: 31-06-1920
+
+    SpecialistDay:
+      type: string
+      format: date
+      example: 31-06-1920
 
     SpecialistListItem:
       type: object
