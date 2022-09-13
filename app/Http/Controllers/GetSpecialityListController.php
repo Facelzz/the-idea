@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\GetActiveSpecialitiesAction;
 use App\Http\Requests\GetSpecialityListRequest;
-use App\Http\Resources\SpecialistListResource;
+use App\Http\Resources\SpecialityListResource;
 use Illuminate\Http\JsonResponse;
 
 class GetSpecialityListController
@@ -17,6 +17,6 @@ class GetSpecialityListController
     ): JsonResponse {
         $specialists = $getSpecialists->execute($request->getPage(), $request->getPerPage());
 
-        return response()->json(SpecialistListResource::collection($specialists));
+        return response()->json(SpecialityListResource::collection($specialists));
     }
 }
