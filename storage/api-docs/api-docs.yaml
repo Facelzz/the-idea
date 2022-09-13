@@ -9,6 +9,30 @@ info:
   version: "1"
 
 paths:
+  /specialities:
+    get:
+      tags: [Specialists]
+      summary: List of specialities
+      description: List of all specialities in the system
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationParameter'
+        - $ref: '#/components/parameters/PerPagePaginationParameter'
+      responses:
+        200:
+          description: List of specialities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialityListItem'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
   /specialists:
     get:
       tags: [Specialists]
@@ -143,10 +167,12 @@ components:
     PageParameter:
       type: integer
       minimum: 1
+      example: 1
 
     PerPageParameter:
       type: integer
       minimum: 1
+      example: 1
 
     SpecialistName:
       type: string
@@ -207,3 +233,14 @@ components:
             minItems: 1
             items:
               type: string
+
+    SpecialityListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          $ref: '#/components/schemas/SpecialityName'
+      required:
+        - id
+        - name
