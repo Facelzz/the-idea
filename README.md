@@ -7,7 +7,7 @@ This is an implementation of specialist' appointment management system with Lara
 Public API allows you to get list of specialists, get free days and hours for the specific specialist
 _and make an appointment (WIP)_
 
-You can browse API Docs locally at **http://the-lidea.test/docs** after following the instructions in [Local usage guide](#Local usage guide) 
+You can browse API Docs locally at **http://the-lidea.test/docs** after following the instructions in [Local usage guide](README.md#local-usage-guide) 
 
 ## Requirements
 
