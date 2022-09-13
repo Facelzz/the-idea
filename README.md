@@ -1,10 +1,13 @@
 # The Idea repo
 
-The description of this project is still something that need to be worked on... So **WIP** :)
+This is an implementation of specialist' appointment management system with Laravel framework
 
 ## Intro
 
-**WIP** 
+Public API allows you to get list of specialists, get free days and hours for the specific specialist
+_and make an appointment (WIP)_
+
+You can browse API Docs locally at **http://the-lidea.test/docs** after following the instructions in [Local usage guide](#Local usage guide) 
 
 ## Requirements
 
@@ -16,7 +19,7 @@ The description of this project is still something that need to be worked on... 
 1) Append your _hosts_ file (_/etc/hosts_ for UNIX systems) with test domains needed by the local usage:
 ```shell
 # The Idea
-127.0.0.1 api.tidea.test
+127.0.0.1 the-lidea.test
 ```
 
 2) Run Docker Compose in the separate terminal (or use **-d** flag to run it in the background):
