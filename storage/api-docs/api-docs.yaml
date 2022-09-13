@@ -36,7 +36,7 @@ paths:
 
   /api/specialists/{specialist}:
     get:
-      tags: [ Specialists ]
+      tags: [Specialists]
       summary: Get free days
       description: Get free days for a specific specialist
       parameters:
@@ -51,6 +51,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpecialistDay'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /api/specialists/{specialist}/{day}:
+    get:
+      tags: [Specialists]
+      summary: Get free hours
+      description: Get free hours for a specific specialist and day
+      parameters:
+        - $ref: '#/components/parameters/SpecialistId'
+        - $ref: '#/components/parameters/SpecialistDay'
+      responses:
+        200:
+          description: List of free hours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialistHour'
         422:
           description: Validation errors
           content:
@@ -99,6 +123,16 @@ components:
       schema:
         $ref: '#/components/schemas/SpecialistDueToParameter'
 
+    SpecialistDay:
+      in: query
+      name: day
+      required: true
+      description: |
+        Defines the `to` date for free days filtration, where `from` date is **today**.
+        Default value is the first day of the next month
+      schema:
+        $ref: '#/components/schemas/SpecialistDay'
+
   schemas:
 
     Id:
@@ -132,6 +166,11 @@ components:
       type: string
       format: date
       example: 31-06-1920
+
+    SpecialistHour:
+      type: string
+      description: Time in 24-hour format (1 hour interval so only hours used)
+      example: 23:00
 
     SpecialistListItem:
       type: object
