@@ -1,0 +1,14 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  paths:
+    - app
+    - config
+  excludePaths:
+    - */Tests/*
+  level: 6 # (0-8)
+  checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
+  parallel:
+  		maximumNumberOfProcesses: 2

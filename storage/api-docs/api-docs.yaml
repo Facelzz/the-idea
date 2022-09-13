@@ -1,0 +1,246 @@
+openapi: 3.0.1
+
+info:
+  title: "The LIdea project"
+  description: "REST API docs for The LIdea project"
+  contact:
+    name: "Ilya Facelzz"
+    email: "ilya.facelzz+the-lidea@gmail.com"
+  version: "1"
+
+paths:
+  /specialities:
+    get:
+      tags: [Specialists]
+      summary: List of specialities
+      description: List of all specialities in the system
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationParameter'
+        - $ref: '#/components/parameters/PerPagePaginationParameter'
+      responses:
+        200:
+          description: List of specialities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialityListItem'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /specialists:
+    get:
+      tags: [Specialists]
+      summary: List of specialists
+      description: List of all specialists in the system
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationParameter'
+        - $ref: '#/components/parameters/PerPagePaginationParameter'
+        - $ref: '#/components/parameters/SpecialityIdParameter'
+      responses:
+        200:
+          description: List of specialists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialistListItem'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /api/specialists/{specialist}:
+    get:
+      tags: [Specialists]
+      summary: Get free days
+      description: Get free days for a specific specialist
+      parameters:
+        - $ref: '#/components/parameters/SpecialityIdParameter'
+        - $ref: '#/components/parameters/SpecialistDueTo'
+      responses:
+        200:
+          description: List of free days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialistDay'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /api/specialists/{specialist}/{day}:
+    get:
+      tags: [Specialists]
+      summary: Get free hours
+      description: Get free hours for a specific specialist and day
+      parameters:
+        - $ref: '#/components/parameters/SpecialistId'
+        - $ref: '#/components/parameters/SpecialistDay'
+      responses:
+        200:
+          description: List of free hours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialistHour'
+        422:
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+components:
+  parameters:
+
+    PagePaginationParameter:
+      in: query
+      name: page
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageParameter'
+
+    PerPagePaginationParameter:
+      in: query
+      name: page
+      required: false
+      schema:
+        $ref: '#/components/schemas/PerPageParameter'
+
+    SpecialityIdParameter:
+      in: query
+      name: specialityId
+      required: false
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    SpecialistId:
+      in: path
+      name: specialist
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    SpecialistDueTo:
+      in: query
+      name: dueTo
+      required: false
+      description: |
+        Defines the `to` date for free days filtration, where `from` date is **today**.
+        Default value is the first day of the next month
+      schema:
+        $ref: '#/components/schemas/SpecialistDueToParameter'
+
+    SpecialistDay:
+      in: query
+      name: day
+      required: true
+      description: |
+        Defines the `to` date for free days filtration, where `from` date is **today**.
+        Default value is the first day of the next month
+      schema:
+        $ref: '#/components/schemas/SpecialistDay'
+
+  schemas:
+
+    Id:
+      type: integer
+      minimum: 1
+      example: 1
+
+    PageParameter:
+      type: integer
+      minimum: 1
+      example: 1
+
+    PerPageParameter:
+      type: integer
+      minimum: 1
+      example: 1
+
+    SpecialistName:
+      type: string
+      maxLength: 256
+
+    SpecialityName:
+      type: string
+      maxLength: 128
+
+    SpecialistDueToParameter:
+      type: string
+      description: Defines the 'to' date for free days filtration, when 'from' in **now**
+      format: date
+      example: 31-06-1920
+
+    SpecialistDay:
+      type: string
+      format: date
+      example: 31-06-1920
+
+    SpecialistHour:
+      type: string
+      description: Time in 24-hour format (1 hour interval so only hours used)
+      example: 23:00
+
+    SpecialistListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          $ref: '#/components/schemas/SpecialistName'
+        speciality:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            name:
+              $ref: '#/components/schemas/SpecialityName'
+          required:
+            - id
+            - name
+      required:
+        - id
+        - name
+        - speciality
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          minProperties: 1
+          additionalProperties:
+            type: array
+            minItems: 1
+            items:
+              type: string
+
+    SpecialityListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          $ref: '#/components/schemas/SpecialityName'
+      required:
+        - id
+        - name
