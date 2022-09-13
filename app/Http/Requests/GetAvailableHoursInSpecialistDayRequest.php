@@ -32,6 +32,6 @@ class GetAvailableHoursInSpecialistDayRequest extends FormRequest
 
     public function getDay(): Carbon
     {
-        return new Carbon($this->input('day'));
+        return new Carbon($this->route('day'));
     }
 }

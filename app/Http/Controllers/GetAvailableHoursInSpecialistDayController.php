@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\GetAvailableDaysForSpecialistAction;
+use App\Actions\{GetAvailableDaysForSpecialistAction, GetAvailableHoursInDayForSpecialistAction};
 use App\Exceptions\SpecialistNotFoundException;
 use App\Http\Requests\GetAvailableHoursInSpecialistDayRequest;
 use Illuminate\Http\JsonResponse;
@@ -14,18 +14,21 @@ class GetAvailableHoursInSpecialistDayController
 {
     public function __invoke(
         GetAvailableHoursInSpecialistDayRequest $request,
-        GetAvailableDaysForSpecialistAction $getAvailableDaysForSpecialist
+        GetAvailableDaysForSpecialistAction $getAvailableDaysForSpecialist,
+        GetAvailableHoursInDayForSpecialistAction $getAvailableHoursForSpecialist,
     ): JsonResponse {
         try {
             $dates = $getAvailableDaysForSpecialist->execute($request->getSpecialistId(), now()->addMonths(3));
-            if (!in_array($request->getDay(), $dates->toArray(), true)) {
+            if (!in_array($request->getDay()->format('d-m-Y'), $dates->toArray(), true)) {
                 return response()->json([
                     'error' => __('errors.no_free_hours.code'),
                     'message' => __('errors.no_free_hours.message'),
                 ], SymfonyResponse::HTTP_NOT_FOUND);
             }
 
-            return response()->json();
+            $hours = $getAvailableHoursForSpecialist->execute($request->getSpecialistId(), $request->getDay());
+
+            return response()->json($hours);
         } catch (SpecialistNotFoundException) {
             return response()->json([
                 'error' => __('errors.specialist_not_found.code'),

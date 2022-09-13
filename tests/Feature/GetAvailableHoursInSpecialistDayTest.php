@@ -59,4 +59,23 @@ class GetAvailableHoursInSpecialistDayTest extends TestCase
             'message' => 'Specialist has no free hours on this day',
         ]);
     }
+
+    public function testSuccessResponse(): void
+    {
+        $this->travelTo(now()->startOfMonth());
+        $specialist = Specialist::factory()->create(['status' => SpecialistStatus::Active]);
+        $busyDay = now()->addDays(5);
+        Appointment::factory()->create([
+            'specialist_id' => $specialist->id,
+            'time' => $busyDay->setTime(8, 0),
+        ]);
+
+        $response = $this->getJson(route($this->route, ['specialist' => $specialist->id, 'day' => $busyDay->format('d-m-Y')]));
+        $response->assertOk();
+        $this->assertGreaterThan(1, count($response->json()));
+        foreach ($response->json() as $item) {
+            $this->assertMatchesRegularExpression('/^\d{2}:\d{2}$/', $item);
+        }
+        $response->assertDontSee($busyDay->format('H:i'));
+    }
 }
