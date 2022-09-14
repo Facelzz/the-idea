@@ -75,6 +75,22 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpecialistDay'
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                SpecialistNotFound:
+                  value:
+                    error: "specialist:notFound"
+                    message: "Specialist with a given ID not found"
         422:
           description: Validation errors
           content:
@@ -99,6 +115,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpecialistHour'
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                NoFreeFours:
+                  value:
+                    error: "specialist:dayIsBusy"
+                    message: "Specialist has no free hours on this day"
+                SpecialistNotFound:
+                  value:
+                    error: "specialist:notFound"
+                    message: "Specialist with a given ID not found"
         422:
           description: Validation errors
           content:
